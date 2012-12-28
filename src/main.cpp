@@ -7,10 +7,28 @@ extern "C"
 #include <SDL.h>
 #include <lua.h>
 #include <lauxlib.h>
+#include <unistd.h>
 }
 
 int main(int argc, char *argv[])
 {
+    int c;
+
+    while ((c = getopt(argc, argv, "hv")) != -1) {
+        switch (c) {
+            case 'h':
+                std::cout << "Nope, no help available yet." << std::endl;
+                return EXIT_SUCCESS;
+                break;
+            case 'v':
+                std::cout << "0" << std::endl;
+                return EXIT_SUCCESS;
+                break;
+            default:
+                break;
+        }
+    }
+
     lua_State *L = luaL_newstate();
 
     if (!L)
