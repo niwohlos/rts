@@ -8,7 +8,7 @@ all:
 	make game
 
 game: $(patsubst src/%.cpp, build/%.o, $(wildcard src/*.cpp))
-	g++ -o game $< $(LIBS)
+	g++ -o game $^ $(LIBS)
 
 build/%.o: src/%.cpp
 	g++ $(CXXFLAGS) -c $< -o $@
