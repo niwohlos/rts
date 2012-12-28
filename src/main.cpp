@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 extern "C"
 {
@@ -11,6 +12,9 @@ extern "C"
 #include <unistd.h>
 }
 
+#include <yaml-cpp/yaml.h>
+
+#include "unit.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +39,27 @@ int main(int argc, char *argv[])
                 break;
         }
     }
+
+    std::ifstream intank("data/tank.yaml");
+    std::ifstream insupport("data/support.yaml");
+
+    YAML::Parser tank(intank);
+    YAML::Parser support(insupport);
+
+    intank.close();
+    insupport.close();
+
+    Unit utank;
+    Unit usupport;
+
+    YAML::Node ntank;
+    YAML::Node nsupport;
+
+    tank.GetNextDocument(ntank);
+    support.GetNextDocument(nsupport);
+
+    ntank >> utank;
+    nsupport >> usupport;
 
     lua_State *L = luaL_newstate();
 
