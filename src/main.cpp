@@ -4,9 +4,9 @@
 extern "C"
 {
 #include <GL/gl.h>
-#include <SDL/SDL.h>
-#include <lua5.2/lua.h>
-#include <lua5.2/lauxlib.h>
+#include <SDL.h>
+#include <lua.h>
+#include <lauxlib.h>
 }
 
 int main(int argc, char *argv[])

@@ -1,4 +1,4 @@
-CXXFLAGS = -g -Wall -Wextra -std=gnu++11 $(shell sdl-config --cflags)
+CXXFLAGS = -g -Wall -Wextra -std=gnu++11 -I/usr/include/lua5.2 $(shell sdl-config --cflags)
 LIBS = -llua5.2 -lGL $(shell sdl-config --libs)
 
 .PHONY: all clean
