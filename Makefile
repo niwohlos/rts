@@ -1,4 +1,5 @@
-CXXFLAGS = -g -Wall -Wextra -std=gnu++11
+CXXFLAGS = -g -Wall -Wextra -std=gnu++11 $(shell sdl-config --cflags)
+LIBS = -llua5.2 -lGL $(shell sdl-config --libs)
 
 .PHONY: all clean
 
@@ -7,7 +8,7 @@ all:
 	make game
 
 game: $(patsubst src/%.cpp, build/%.o, $(wildcard src/*.cpp))
-	g++ -o game $<
+	g++ -o game $< $(LIBS)
 
 build/%.o: src/%.cpp
 	g++ $(CXXFLAGS) -c $< -o $@
