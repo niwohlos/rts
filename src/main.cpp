@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <cstring>
 
 extern "C"
 {
@@ -10,15 +11,21 @@ extern "C"
 #include <unistd.h>
 }
 
+
 int main(int argc, char *argv[])
 {
     int c;
+    int width = 800, height = 600;
 
-    while ((c = getopt(argc, argv, "hv")) != -1) {
+    while ((c = getopt(argc, argv, "vw:h:")) != -1) {
         switch (c) {
+            case 'w':
+                width = atoi(optarg);
+                std::cout << "Using a width of " << width << " pixel" << std::endl;
+                break;
             case 'h':
-                std::cout << "Nope, no help available yet." << std::endl;
-                return EXIT_SUCCESS;
+                height = atoi(optarg);
+                std::cout << "Using a height of " << height << " pixel" << std::endl;
                 break;
             case 'v':
                 std::cout << "0" << std::endl;
@@ -48,7 +55,7 @@ int main(int argc, char *argv[])
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    SDL_SetVideoMode(800, 600, 32, SDL_OPENGL | SDL_DOUBLEBUF);
+    SDL_SetVideoMode(width, height, 32, SDL_OPENGL | SDL_DOUBLEBUF);
 
     bool quit = false;
 
