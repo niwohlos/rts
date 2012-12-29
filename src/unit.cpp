@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 
 #include "unit.hpp"
 
@@ -16,16 +17,46 @@ Unit::Unit(const std::string &path)
 
     if (!parser.GetNextDocument(node))
     {
+        throw std::runtime_error("YAML::Parser::GetNextDocument()");
     }
 
-    std::string script = node >> *this;
+    std::string script(node >> *this);
+
+    file.close();
 
     std::cout << "new unit: (" << reinterpret_cast<void *>(this) << ")" << std::endl << "  script: " << script << std::endl << "  config: " << path << std::endl << std::endl;
 
-    file.close();
+    L = luaL_newstate();
+
+    if (!L)
+    {
+        throw std::runtime_error("luaL_newstate()");
+    }
+
+    luaL_openlibs(L);
+    luaL_loadfile(L, script.c_str());
+
+    if (lua_pcall(L, 0, 0, 0) != LUA_OK)
+    {
+        throw std::runtime_error("lua_pcall(L, 0, 0, 0)");
+    }
+
+    lua_newtable(L);
+    lua_getglobal(L, "Unit");
+    lua_setmetatable(L, -2);
+}
+
+Unit::~Unit()
+{
+    if (L)
+        lua_close(L);
 }
 
 Tank::Tank() : Unit("data/tank.yaml")
+{
+}
+
+Tank::~Tank()
 {
 }
 
@@ -33,7 +64,11 @@ Support::Support() : Unit("data/support.yaml")
 {
 }
 
-const std::string operator>>(const YAML::Node &node, Unit &unit)
+Support::~Support()
+{
+}
+
+std::string operator>>(const YAML::Node &node, Unit &unit)
 {
     Unit tmp;
     std::string script("data/unit.lua");

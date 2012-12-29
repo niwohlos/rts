@@ -6,6 +6,13 @@
 
 #include <yaml-cpp/yaml.h>
 
+extern "C"
+{
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+}
+
 struct Unit
 {
     double hitpoints = 100.0;
@@ -14,20 +21,25 @@ struct Unit
     double charge = 0.0;
     double reload = 1.0;
 
+    lua_State *L = nullptr;
+
     Unit() = default;
     Unit(const std::string &path);
+    ~Unit();
 };
 
 struct Tank : Unit
 {
     Tank();
+    ~Tank();
 };
 
 struct Support : Unit
 {
     Support();
+    ~Support();
 };
 
-const std::string operator>>(const YAML::Node &node, Unit &unit);
+std::string operator>>(const YAML::Node &node, Unit &unit);
 
 #endif
