@@ -1,13 +1,39 @@
 #include <iostream>
+#include <fstream>
 
 #include "unit.hpp"
 
-Tank::Tank() : Unit()
+Unit::Unit(const std::string &path)
 {
-    lua_dofile(YAML::Load("data/tank.yaml") >> *this);
+    std::ifstream file;
+
+    file.exceptions(file.exceptions() | std::ios_base::failbit);
+
+    file.open(path);
+
+    YAML::Parser parser(file);
+    YAML::Node node;
+
+    if (!parser.GetNextDocument(node))
+    {
+    }
+
+    std::string script = node >> *this;
+
+    std::cout << "new unit: (" << reinterpret_cast<void *>(this) << ")" << std::endl << "  script: " << script << std::endl << "  config: " << path << std::endl << std::endl;
+
+    file.close();
 }
 
-const std::string &&operator>>(const YAML::Node &node, Unit &unit)
+Tank::Tank() : Unit("data/tank.yaml")
+{
+}
+
+Support::Support() : Unit("data/support.yaml")
+{
+}
+
+const std::string operator>>(const YAML::Node &node, Unit &unit)
 {
     Unit tmp;
     std::string script("data/unit.lua");

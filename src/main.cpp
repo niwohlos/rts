@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    /*
     std::ifstream intank("data/tank.yaml");
     std::ifstream insupport("data/support.yaml");
 
@@ -60,6 +61,10 @@ int main(int argc, char *argv[])
 
     ntank >> utank;
     nsupport >> usupport;
+    */
+
+    Tank tank;
+    Support support;
 
     lua_State *L = luaL_newstate();
 
