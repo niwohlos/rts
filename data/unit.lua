@@ -33,7 +33,7 @@ end
 function Unit:add_supporter()
     self.supporters = self.supporters + 1
 
-    if unit.supporters > 3 then
+    if self.supporters > 3 then
         self:explode()
     end
 end
