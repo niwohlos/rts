@@ -34,16 +34,23 @@ Unit::Unit(const std::string &path)
     }
 
     luaL_openlibs(L);
-    luaL_loadfile(L, script.c_str());
+    if (luaL_loadfile(L, script.c_str()) != LUA_OK)
+    {
+        throw std::runtime_error("luaL_loadfile(L, script.c_str())");
+    }
 
     if (lua_pcall(L, 0, 0, 0) != LUA_OK)
     {
         throw std::runtime_error("lua_pcall(L, 0, 0, 0)");
     }
 
-    lua_newtable(L);
     lua_getglobal(L, "Unit");
-    lua_setmetatable(L, -2);
+    lua_getfield(L, -1, "create");
+    lua_remove(L, -2);
+    lua_pushnumber(L, hitpoints);
+    lua_pushnumber(L, damage);
+    lua_pushnumber(L, speed);
+    lua_call(L, 3, 1);
 }
 
 Unit::~Unit()
