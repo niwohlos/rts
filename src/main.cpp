@@ -11,6 +11,8 @@ extern "C"
 #include <unistd.h>
 }
 
+#include "terrain.hpp"
+
 
 int main(int argc, char *argv[])
 {
@@ -59,17 +61,22 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
+    glEnable(GL_TEXTURE_2D);
+
+    terrain t("data/terrain-height.png");
+
+
+    glColor3f(1.f, 1.f, 1.f);
+
     while (!quit)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBegin(GL_TRIANGLES);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex2f(0.0f, 0.5f);
-        glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex2f(0.5f, -0.5f);
-        glColor3f(0.0f, 0.0f, 1.0f);
-        glVertex2f(-0.5f, -0.5f);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f);
+        glTexCoord2f(1.f, 0.f); glVertex2f( 1.f, -1.f);
+        glTexCoord2f(1.f, 1.f); glVertex2f( 1.f,  1.f);
+        glTexCoord2f(0.f, 1.f); glVertex2f(-1.f,  1.f);
         glEnd();
 
         SDL_GL_SwapBuffers();
