@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include <cmath>
 
 extern "C"
 {
@@ -11,6 +12,7 @@ extern "C"
 #include <unistd.h>
 }
 
+#include "camera.hpp"
 #include "terrain.hpp"
 
 
@@ -66,18 +68,18 @@ int main(int argc, char *argv[])
     terrain t("data/terrain-height.png");
 
 
-    glColor3f(1.f, 1.f, 1.f);
+    camera *cam = new camera(M_PI / 3.f, (float)width / (float)height);
+
+    t.update_camera(cam);
+
 
     while (!quit)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.f, 0.f); glVertex2f(-1.f, -1.f);
-        glTexCoord2f(1.f, 0.f); glVertex2f( 1.f, -1.f);
-        glTexCoord2f(1.f, 1.f); glVertex2f( 1.f,  1.f);
-        glTexCoord2f(0.f, 1.f); glVertex2f(-1.f,  1.f);
-        glEnd();
+
+        t.draw();
+
 
         SDL_GL_SwapBuffers();
 
