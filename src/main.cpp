@@ -64,8 +64,9 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
+
+    init_opengl();
+
 
     terrain t("data/terrain-height.png");
 

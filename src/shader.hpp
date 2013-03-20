@@ -23,6 +23,7 @@ class program
 {
     public:
         program(std::initializer_list<const shader *> shaders);
+        program(const char *base);
         ~program(void);
 
         void use(void);

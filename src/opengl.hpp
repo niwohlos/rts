@@ -9,4 +9,10 @@ extern "C"
 #include <GL/glext.h>
 }
 
+
+void init_opengl(void);
+
+
+extern int ogl_major, ogl_minor;
+
 #endif

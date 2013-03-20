@@ -191,9 +191,7 @@ terrain::terrain(const char *height_map)
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
 
-    shader vert("data/terrain.vert.glsl"), frag("data/terrain.frag.glsl");
-
-    display_program = new program({ &vert, &frag });
+    display_program = new program("data/terrain");
 
     display_program->set_uniform("height_map", 0);
     display_program_mvp_loc = display_program->get_uniform_location("mvp");
