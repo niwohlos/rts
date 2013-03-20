@@ -1,5 +1,6 @@
 #include "opengl.hpp"
 
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
@@ -85,6 +86,13 @@ int main(int argc, char *argv[])
 
 
         SDL_GL_SwapBuffers();
+
+
+        float fps = get_fps();
+
+        printf("FPS: %.1f    \r", fps);
+        fflush(stdout);
+
 
         SDL_Event event;
 

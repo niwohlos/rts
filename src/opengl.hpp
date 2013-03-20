@@ -12,6 +12,8 @@ extern "C"
 
 void init_opengl(void);
 
+float get_fps(void);
+
 
 extern int ogl_major, ogl_minor;
 
