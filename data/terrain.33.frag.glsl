@@ -19,7 +19,7 @@ void main(void)
 
     vec3 normal = normalize(normal_matrix * vec3(h2 - h1, 0.01, h3 - h1));
 
-    vec3 color = texture2D(ter_texture, vf_texcoord).rgb;
+    vec3 tex_color = texture2D(ter_texture, vf_texcoord).rgb;
 
-    color = vec4(color * max(dot(normal, incoming_light), 0.0), 1.0);
+    color = vec4(tex_color * max(dot(normal, incoming_light), 0.0), 1.0);
 }
