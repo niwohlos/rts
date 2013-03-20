@@ -15,7 +15,7 @@ void main(void)
 {
     vec3 normal = normalize(normal_matrix * (texture2D(normal_height, vf_texcoord).xzy * 2.0 - vec3(1.0, 1.0, 1.0)));
 
-    vec3 color = texture2D(ter_texture, vf_texcoord).rgb;
+    vec3 tex_color = texture2D(ter_texture, vf_texcoord).rgb;
 
-    color = vec4(color * max(dot(normal, incoming_light), 0.0), 1.0);
+    color = vec4(tex_color * max(dot(normal, incoming_light), 0.0), 1.0);
 }
