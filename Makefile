@@ -7,14 +7,11 @@ OBJECTS = $(patsubst src/%.cpp, build/%.o, $(wildcard src/*.cpp))
 
 all: game
 
-build:
-	mkdir -p $@
-
 game: $(OBJECTS)
 	g++ -o game $^ $(LIBS)
 
-build/%.o: src/%.cpp build
+build/%.o: src/%.cpp
 	g++ $(CXXFLAGS) -c $< -o $@
 
 clean:
-	-rm -Rf build
+	-rm -Rf build/*
