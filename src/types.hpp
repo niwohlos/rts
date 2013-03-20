@@ -65,6 +65,33 @@ class vec3
 };
 
 
+class vec2
+{
+    public:
+        vec2(void)
+        { x = y = 0.f; }
+
+        vec2(float xv, float yv)
+        { x = xv; y = yv; }
+
+
+        float operator[](int i) const
+        { return d[i]; }
+
+        float &operator[](int i)
+        { return d[i]; }
+
+
+        union
+        {
+            struct { float x, y; };
+            struct { float r, g; };
+            struct { float s, t; };
+            float d[2];
+        };
+};
+
+
 class mat4
 {
     public:

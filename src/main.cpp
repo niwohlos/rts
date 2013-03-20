@@ -1,3 +1,5 @@
+#include "opengl.hpp"
+
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
@@ -5,7 +7,6 @@
 
 extern "C"
 {
-#include <GL/gl.h>
 #include <SDL.h>
 #include <lua.h>
 #include <lauxlib.h>
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
     bool quit = false;
 
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
 
     terrain t("data/terrain-height.png");
 
@@ -75,7 +77,7 @@ int main(int argc, char *argv[])
 
     while (!quit)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
         t.draw();

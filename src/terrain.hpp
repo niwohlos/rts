@@ -20,6 +20,9 @@ class terrain
 
         program *display_program;
         int display_program_mvp_loc;
+
+        unsigned vertex_buffer;
+        int vertex_buffer_vertices;
 };
 
 #endif

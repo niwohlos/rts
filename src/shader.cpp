@@ -1,13 +1,9 @@
+#include "opengl.hpp"
+
+#include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <initializer_list>
-
-extern "C"
-{
-#define GL_GLEXT_PROTOTYPES
-
-#include <GL/gl.h>
-#include <GL/glext.h>
-}
 
 #include "shader.hpp"
 #include "types.hpp"
@@ -130,4 +126,12 @@ void program::set_uniform(int location, const mat4 &m)
     use();
 
     glUniformMatrix4fv(location, 1, false, m.d);
+}
+
+
+void program::set_uniform(int location, int v)
+{
+    use();
+
+    glUniform1i(location, v);
 }

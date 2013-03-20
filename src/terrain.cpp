@@ -1,6 +1,7 @@
+#include "opengl.hpp"
+
 extern "C"
 {
-#include <GL/gl.h>
 #include <SDL.h>
 #include <SDL_image.h>
 }
@@ -146,10 +147,55 @@ terrain::terrain(const char *height_map)
     }
 
 
+    glGenBuffers(1, &vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, (1 + 512 * 1023) * sizeof(vec2), NULL, GL_STATIC_DRAW);
+
+    vec2 *vertex_data = reinterpret_cast<vec2 *>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+
+    int vtx_index = 0;
+
+    vertex_data[vtx_index++] = vec2(-1.f, 1.f);
+
+    for (int y = 0; y < 512; y++)
+    {
+        for (int x = 0; x < 512; x++)
+        {
+            if (y % 2)
+            {
+                // Even: Left to right
+
+                vertex_data[vtx_index++] = vec2(x / 512.f, 1.f - (y + 1) / 512.f);
+
+                if (x < 511)
+                {
+                    vertex_data[vtx_index++] = vec2((x + 1) / 512.f, 1.f - y / 512.f);
+                }
+            }
+            else
+            {
+                // Odd: Right to left
+
+                vertex_data[vtx_index++] = vec2(1.f - x / 512.f, 1.f - (y + 1) / 512.f);
+
+                if (x < 511)
+                {
+                    vertex_data[vtx_index++] = vec2(1.f - (x + 1) / 512.f, 1.f - y / 512.f);
+                }
+            }
+        }
+    }
+
+    vertex_buffer_vertices = vtx_index;
+
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+
+
     shader vert("data/terrain.vert.glsl"), frag("data/terrain.frag.glsl");
 
     display_program = new program({ &vert, &frag });
 
+    display_program->set_uniform("height_map", 0);
     display_program_mvp_loc = display_program->get_uniform_location("mvp");
 }
 
@@ -165,6 +211,18 @@ terrain::~terrain(void)
 void terrain::draw(void)
 {
     display_program->use();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, height_map_gl_id);
+
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, reinterpret_cast<void *>(0));
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, vertex_buffer_vertices);
+
+    glDisableVertexAttribArray(0);
 }
 
 
