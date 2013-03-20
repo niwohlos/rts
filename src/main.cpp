@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     init_opengl();
 
 
-    terrain t("data/terrain-height.png");
+    terrain t("data/terrain-height.png", "data/terrain-texture.png");
 
 
     camera *cam = new camera(M_PI / 3.f, (float)width / (float)height);

@@ -8,7 +8,7 @@
 class terrain
 {
     public:
-        terrain(const char *height_map);
+        terrain(const char *height_map, const char *texture);
         ~terrain(void);
 
         void draw(void);
@@ -16,7 +16,7 @@ class terrain
 
 
     private:
-        unsigned height_map_gl_id;
+        unsigned height_map_gl_id, texture_gl_id;
 
         program *display_program;
         int display_program_mvp_loc;

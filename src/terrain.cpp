@@ -137,11 +137,18 @@ static unsigned load_texture(const char *filename, int channels)
 }
 
 
-terrain::terrain(const char *height_map)
+terrain::terrain(const char *height_map, const char *texture)
 {
     height_map_gl_id = load_texture(height_map, 1);
 
     if (!height_map_gl_id)
+    {
+        throw 42; // TODO
+    }
+
+    texture_gl_id = load_texture(texture, 3);
+
+    if (!texture_gl_id)
     {
         throw 42; // TODO
     }
@@ -194,6 +201,7 @@ terrain::terrain(const char *height_map)
     display_program = new program("data/terrain");
 
     display_program->set_uniform("height_map", 0);
+    display_program->set_uniform("ter_texture", 1);
     display_program_mvp_loc = display_program->get_uniform_location("mvp");
 }
 
@@ -212,6 +220,9 @@ void terrain::draw(void)
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, height_map_gl_id);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture_gl_id);
 
     glEnableVertexAttribArray(0);
 

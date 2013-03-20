@@ -14,7 +14,12 @@ void init_opengl(void)
     glGetIntegerv(GL_MAJOR_VERSION, &ogl_major);
     glGetIntegerv(GL_MINOR_VERSION, &ogl_minor);
 
-    glEnable(GL_TEXTURE_2D);
+    for (int i = 0; i < 2; i++)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glEnable(GL_TEXTURE_2D);
+    }
+
     glEnable(GL_DEPTH_TEST);
 }
 
