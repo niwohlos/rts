@@ -1,15 +1,21 @@
+#include "opengl.hpp"
+
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include <cmath>
 
 extern "C"
 {
-#include <GL/gl.h>
 #include <SDL.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <unistd.h>
 }
+
+#include "camera.hpp"
+#include "terrain.hpp"
 
 
 int main(int argc, char *argv[])
@@ -59,20 +65,34 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
+
+    init_opengl();
+
+
+    terrain t("data/terrain-height.png", "data/terrain-texture.png");
+
+
+    camera *cam = new camera(M_PI / 3.f, (float)width / (float)height);
+
+    t.update_camera(cam);
+
+
     while (!quit)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBegin(GL_TRIANGLES);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex2f(0.0f, 0.5f);
-        glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex2f(0.5f, -0.5f);
-        glColor3f(0.0f, 0.0f, 1.0f);
-        glVertex2f(-0.5f, -0.5f);
-        glEnd();
+
+        t.draw();
+
 
         SDL_GL_SwapBuffers();
+
+
+        float fps = get_fps();
+
+        printf("FPS: %.1f    \r", fps);
+        fflush(stdout);
+
 
         SDL_Event event;
 
