@@ -31,6 +31,8 @@ class program
         int get_uniform_location(const char *name);
 
         void set_uniform(int location, const mat4 &m);
+        void set_uniform(int location, const mat3 &m);
+        void set_uniform(int location, const vec3 &v);
         void set_uniform(int location, int v);
 
         template<typename T> void set_uniform(const char *name, const T &v)

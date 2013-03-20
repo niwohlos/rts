@@ -1,6 +1,7 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
+#include <cmath>
 #include <cstring>
 
 
@@ -46,6 +47,14 @@ class vec3
 
         vec3(float xv, float yv, float zv)
         { x = xv; y = yv; z = zv; }
+
+
+        float length(void)
+        { return sqrtf(x * x + y * y + z * z); }
+
+
+        vec3 normed(void)
+        { float len = length(); return vec3(x / len, y / len, z / len); }
 
 
         float operator[](int i) const
@@ -146,6 +155,30 @@ class mat4
 
 
         float d[16];
+};
+
+
+class mat3
+{
+    public:
+        mat3(const mat3 &m)
+        { memcpy(d, m.d, sizeof(d)); }
+
+        mat3(const mat4 &m)
+        { memcpy(&d[0], &m.d[0], sizeof(d[0]) * 3); memcpy(&d[3], &m.d[4], sizeof(d[3]) * 3); memcpy(&d[6], &m.d[8], sizeof(d[6]) * 3); }
+
+        mat3(const vec3 &c1, const vec3 &c2, const vec3 &c3)
+        { memcpy(&d[0], c1.d, sizeof(c1.d)); memcpy(&d[3], c2.d, sizeof(c2.d)); memcpy(&d[6], c3.d, sizeof(c3.d)); }
+
+
+        vec3 operator*(const vec3 &v) const;
+
+
+        float det(void);
+        void transposed_invert(void);
+
+
+        float d[9];
 };
 
 #endif

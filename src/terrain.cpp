@@ -154,9 +154,13 @@ terrain::terrain(const char *height_map, const char *texture)
     }
 
 
+    int grid_resolution = 512;
+    float grid_distance = 1.f / static_cast<float>(grid_resolution);
+
+
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (1 + 512 * 1023) * sizeof(vec2), NULL, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (1 + grid_resolution * (2 * grid_resolution - 1)) * sizeof(vec2), NULL, GL_STATIC_DRAW);
 
     vec2 *vertex_data = reinterpret_cast<vec2 *>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 
@@ -164,30 +168,30 @@ terrain::terrain(const char *height_map, const char *texture)
 
     vertex_data[vtx_index++] = vec2(-1.f, 1.f);
 
-    for (int y = 0; y < 512; y++)
+    for (int y = 0; y < grid_resolution; y++)
     {
-        for (int x = 0; x < 512; x++)
+        for (int x = 0; x < grid_resolution; x++)
         {
             if (y % 2)
             {
                 // Even: Left to right
 
-                vertex_data[vtx_index++] = vec2(x / 512.f, 1.f - (y + 1) / 512.f);
+                vertex_data[vtx_index++] = vec2(x * grid_distance, 1.f - (y + 1) * grid_distance);
 
-                if (x < 511)
+                if (x < grid_resolution - 1)
                 {
-                    vertex_data[vtx_index++] = vec2((x + 1) / 512.f, 1.f - y / 512.f);
+                    vertex_data[vtx_index++] = vec2((x + 1) * grid_distance, 1.f - y * grid_distance);
                 }
             }
             else
             {
                 // Odd: Right to left
 
-                vertex_data[vtx_index++] = vec2(1.f - x / 512.f, 1.f - (y + 1) / 512.f);
+                vertex_data[vtx_index++] = vec2(1.f - x * grid_distance, 1.f - (y + 1) * grid_distance);
 
-                if (x < 511)
+                if (x < grid_resolution - 1)
                 {
-                    vertex_data[vtx_index++] = vec2(1.f - (x + 1) / 512.f, 1.f - y / 512.f);
+                    vertex_data[vtx_index++] = vec2(1.f - (x + 1) * grid_distance, 1.f - y * grid_distance);
                 }
             }
         }
@@ -202,7 +206,9 @@ terrain::terrain(const char *height_map, const char *texture)
 
     display_program->set_uniform("height_map", 0);
     display_program->set_uniform("ter_texture", 1);
-    display_program_mvp_loc = display_program->get_uniform_location("mvp");
+    display_program_mvp_loc = display_program->get_uniform_location("mvp_matrix");
+    display_program_nrm_loc = display_program->get_uniform_location("normal_matrix");
+    display_program_inc_loc = display_program->get_uniform_location("incoming_light");
 }
 
 
@@ -237,5 +243,11 @@ void terrain::draw(void)
 
 void terrain::update_camera(camera *cam)
 {
-    display_program->set_uniform(display_program_mvp_loc, cam->projection * cam->modelview);
+    mat4 mvp(cam->projection * cam->modelview);
+    mat3 nrm(cam->modelview);
+    nrm.transposed_invert();
+
+    display_program->set_uniform(display_program_mvp_loc, mvp);
+    display_program->set_uniform(display_program_nrm_loc, nrm);
+    display_program->set_uniform(display_program_inc_loc, (nrm * vec3(0.f, 1.f, 0.f)).normed());
 }

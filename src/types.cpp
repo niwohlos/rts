@@ -18,9 +18,9 @@ mat4 &mat4::operator*=(const mat4 &m)
             "movaps 48(%1),%%xmm7;"
 
             "pshufd $0x00,%%xmm4,%%xmm8;"
-            "pshufd $0x00,%%xmm5,%%xmm9;"
-            "pshufd $0x00,%%xmm6,%%xmm10;"
-            "pshufd $0x00,%%xmm7,%%xmm11;"
+            "pshufd $0x55,%%xmm4,%%xmm9;"
+            "pshufd $0xAA,%%xmm4,%%xmm10;"
+            "pshufd $0xFF,%%xmm4,%%xmm11;"
             "mulps  %%xmm0,%%xmm8;"
             "mulps  %%xmm1,%%xmm9;"
             "mulps  %%xmm2,%%xmm10;"
@@ -30,10 +30,10 @@ mat4 &mat4::operator*=(const mat4 &m)
             "addps  %%xmm10,%%xmm8;"
             "movaps %%xmm8, 0(%0);"
 
-            "pshufd $0x55,%%xmm4,%%xmm8;"
+            "pshufd $0x00,%%xmm5,%%xmm8;"
             "pshufd $0x55,%%xmm5,%%xmm9;"
-            "pshufd $0x55,%%xmm6,%%xmm10;"
-            "pshufd $0x55,%%xmm7,%%xmm11;"
+            "pshufd $0xAA,%%xmm5,%%xmm10;"
+            "pshufd $0xFF,%%xmm5,%%xmm11;"
             "mulps  %%xmm0,%%xmm8;"
             "mulps  %%xmm1,%%xmm9;"
             "mulps  %%xmm2,%%xmm10;"
@@ -43,10 +43,10 @@ mat4 &mat4::operator*=(const mat4 &m)
             "addps  %%xmm10,%%xmm8;"
             "movaps %%xmm8,16(%0);"
 
-            "pshufd $0xAA,%%xmm4,%%xmm8;"
-            "pshufd $0xAA,%%xmm5,%%xmm9;"
+            "pshufd $0x00,%%xmm6,%%xmm8;"
+            "pshufd $0x55,%%xmm6,%%xmm9;"
             "pshufd $0xAA,%%xmm6,%%xmm10;"
-            "pshufd $0xAA,%%xmm7,%%xmm11;"
+            "pshufd $0xFF,%%xmm6,%%xmm11;"
             "mulps  %%xmm0,%%xmm8;"
             "mulps  %%xmm1,%%xmm9;"
             "mulps  %%xmm2,%%xmm10;"
@@ -57,9 +57,9 @@ mat4 &mat4::operator*=(const mat4 &m)
             "movaps %%xmm8,32(%0);"
 
 
-            "pshufd $0xFF,%%xmm4,%%xmm8;"
-            "pshufd $0xFF,%%xmm5,%%xmm9;"
-            "pshufd $0xFF,%%xmm6,%%xmm10;"
+            "pshufd $0x00,%%xmm7,%%xmm8;"
+            "pshufd $0x55,%%xmm7,%%xmm9;"
+            "pshufd $0xAA,%%xmm7,%%xmm10;"
             "pshufd $0xFF,%%xmm7,%%xmm11;"
             "mulps  %%xmm0,%%xmm8;"
             "mulps  %%xmm1,%%xmm9;"
@@ -166,7 +166,7 @@ mat4 &mat4::rotate(float angle, const vec3 &axis)
         x * x * omc +     c, x * y * omc - z * s, x * z * omc + y * s, 0.f,
         y * x * omc + z * s, y * y * omc +     c, y * z * omc - x * s, 0.f,
         z * x * omc - y * s, z * y * omc + x * s, z * z * omc +     c, 0.f,
-        0.f,                 0.f,                 0.f, 1.f
+        0.f,                 0.f,                 0.f,                 1.f
     };
 
     *this *= *reinterpret_cast<mat4 *>(rm);
@@ -183,17 +183,17 @@ mat4 &mat4::rotate(float angle, const vec3 &axis)
     float _21 = z * y * omc + x * s;
     float _22 = z * z * omc +     c;
 
-    float n00 = d[ 0] * _00 + d[ 4] * _10 + d[ 8] * _20;
-    float n01 = d[ 1] * _00 + d[ 5] * _10 + d[ 9] * _20;
-    float n02 = d[ 2] * _00 + d[ 6] * _10 + d[10] * _20;
+    float n00 = d[ 0] * _00 + d[ 4] * _01 + d[ 8] * _02;
+    float n01 = d[ 1] * _00 + d[ 5] * _01 + d[ 9] * _02;
+    float n02 = d[ 2] * _00 + d[ 6] * _01 + d[10] * _02;
 
-    float n04 = d[ 0] * _01 + d[ 4] * _11 + d[ 8] * _21;
-    float n05 = d[ 1] * _01 + d[ 5] * _11 + d[ 9] * _21;
-    float n06 = d[ 2] * _01 + d[ 6] * _11 + d[10] * _21;
+    float n04 = d[ 0] * _10 + d[ 4] * _11 + d[ 8] * _12;
+    float n05 = d[ 1] * _10 + d[ 5] * _11 + d[ 9] * _12;
+    float n06 = d[ 2] * _10 + d[ 6] * _11 + d[10] * _12;
 
-    float n08 = d[ 0] * _02 + d[ 4] * _12 + d[ 8] * _22;
-    float n09 = d[ 1] * _02 + d[ 5] * _12 + d[ 9] * _22;
-    float n10 = d[ 2] * _02 + d[ 6] * _12 + d[10] * _22;
+    float n08 = d[ 0] * _20 + d[ 4] * _21 + d[ 8] * _22;
+    float n09 = d[ 1] * _20 + d[ 5] * _21 + d[ 9] * _22;
+    float n10 = d[ 2] * _20 + d[ 6] * _21 + d[10] * _22;
 
     d[ 0] = n00; d[ 1] = n01; d[ 2] = n02;
     d[ 4] = n04; d[ 5] = n05; d[ 6] = n06;
@@ -223,7 +223,7 @@ mat4 mat4::rotated(float angle, const vec3 &axis) const
         x * x * omc +     c, x * y * omc - z * s, x * z * omc + y * s, 0.f,
         y * x * omc + z * s, y * y * omc +     c, y * z * omc - x * s, 0.f,
         z * x * omc - y * s, z * y * omc + x * s, z * z * omc +     c, 0.f,
-        0.f,                 0.f,                 0.f, 1.f
+        0.f,                 0.f,                 0.f,                 1.f
     };
 
     return *this * *reinterpret_cast<mat4 *>(rm);
@@ -240,17 +240,17 @@ mat4 mat4::rotated(float angle, const vec3 &axis) const
     float _21 = z * y * omc + x * s;
     float _22 = z * z * omc +     c;
 
-    float n00 = d[ 0] * _00 + d[ 4] * _10 + d[ 8] * _20;
-    float n01 = d[ 1] * _00 + d[ 5] * _10 + d[ 9] * _20;
-    float n02 = d[ 2] * _00 + d[ 6] * _10 + d[10] * _20;
+    float n00 = d[ 0] * _00 + d[ 4] * _01 + d[ 8] * _02;
+    float n01 = d[ 1] * _00 + d[ 5] * _01 + d[ 9] * _02;
+    float n02 = d[ 2] * _00 + d[ 6] * _01 + d[10] * _02;
 
-    float n04 = d[ 0] * _01 + d[ 4] * _11 + d[ 8] * _21;
-    float n05 = d[ 1] * _01 + d[ 5] * _11 + d[ 9] * _21;
-    float n06 = d[ 2] * _01 + d[ 6] * _11 + d[10] * _21;
+    float n04 = d[ 0] * _10 + d[ 4] * _11 + d[ 8] * _12;
+    float n05 = d[ 1] * _10 + d[ 5] * _11 + d[ 9] * _12;
+    float n06 = d[ 2] * _10 + d[ 6] * _11 + d[10] * _12;
 
-    float n08 = d[ 0] * _02 + d[ 4] * _12 + d[ 8] * _22;
-    float n09 = d[ 1] * _02 + d[ 5] * _12 + d[ 9] * _22;
-    float n10 = d[ 2] * _02 + d[ 6] * _12 + d[10] * _22;
+    float n08 = d[ 0] * _20 + d[ 4] * _21 + d[ 8] * _22;
+    float n09 = d[ 1] * _20 + d[ 5] * _21 + d[ 9] * _22;
+    float n10 = d[ 2] * _20 + d[ 6] * _21 + d[10] * _22;
 
     return mat4(vec4( n00 ,  n01 ,  n02 , d[ 3]),
                 vec4( n04 ,  n05 ,  n06 , d[ 7]),
@@ -293,6 +293,75 @@ mat4 mat4::scaled(const vec3 &fac) const
                 *reinterpret_cast<const vec4 *>(&d[ 4]) * fac.y,
                 *reinterpret_cast<const vec4 *>(&d[ 8]) * fac.z,
                 *reinterpret_cast<const vec4 *>(&d[12]));
+}
+
+
+float mat3::det(void)
+{
+    return d[0] * (d[4] * d[8] - d[5] * d[7]) -
+           d[3] * (d[1] * d[8] - d[2] * d[7]) +
+           d[6] * (d[1] * d[5] - d[2] * d[4]);
+}
+
+void mat3::transposed_invert(void)
+{
+#ifdef X64_ASSEMBLY
+    __asm__ __volatile__ (
+            "rcpss  %1,%1;"
+            "pshufd $0x00,%1,%1;"
+            "movaps  0(%0),%%xmm0;"
+            "movups 12(%0),%%xmm1;"
+            "movups 24(%0),%%xmm2;"
+
+            "pshufd $0x09,%%xmm0,%%xmm3;"
+            "pshufd $0x09,%%xmm1,%%xmm4;"
+            "pshufd $0x09,%%xmm2,%%xmm5;"
+            "pshufd $0x12,%%xmm0,%%xmm6;"
+            "pshufd $0x12,%%xmm1,%%xmm7;"
+            "pshufd $0x12,%%xmm2,%%xmm8;"
+
+            "movaps %%xmm4,%%xmm9;"
+            "movaps %%xmm7,%%xmm10;"
+            "mulps  %%xmm8,%%xmm9;"
+            "mulps  %%xmm5,%%xmm10;"
+
+            "mulps  %%xmm6,%%xmm5;"
+            "mulps  %%xmm3,%%xmm8;"
+
+            "mulps  %%xmm7,%%xmm3;"
+            "mulps  %%xmm4,%%xmm6;"
+
+            "subps  %%xmm10,%%xmm9;"
+            "subps  %%xmm8,%%xmm5;"
+            "subps  %%xmm6,%%xmm3;"
+
+            "mulps  %1,%%xmm9;"
+            "mulps  %1,%%xmm5;"
+            "mulps  %1,%%xmm3;"
+
+            "movaps %%xmm9, 0(%0);"
+            "movups %%xmm5,12(%0);"
+            "movups %%xmm3,24(%0)"
+            :: "r"(d), "x"(det())
+            : "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7", "xmm8", "xmm9", "xmm10", "memory"
+    );
+#else
+    float nd[9], rcp_det = 1.f / det();
+
+    nd[0] = rcp_det * (d[4] * d[8] - d[5] * d[7]);
+    nd[1] = rcp_det * (d[5] * d[6] - d[3] * d[8]);
+    nd[2] = rcp_det * (d[3] * d[7] - d[4] * d[6]);
+
+    nd[3] = rcp_det * (d[2] * d[7] - d[1] * d[8]);
+    nd[4] = rcp_det * (d[0] * d[8] - d[2] * d[6]);
+    nd[5] = rcp_det * (d[1] * d[6] - d[0] * d[7]);
+
+    nd[6] = rcp_det * (d[1] * d[5] - d[2] * d[4]);
+    nd[7] = rcp_det * (d[2] * d[3] - d[0] * d[5]);
+    nd[8] = rcp_det * (d[0] * d[4] - d[1] * d[3]);
+
+    memcpy(d, nd, sizeof(d));
+#endif
 }
 
 
@@ -536,4 +605,14 @@ void mat4::transposed_invert(void)
 
     memcpy(d, nd, sizeof(nd));
 #endif
+}
+
+
+vec3 mat3::operator*(const vec3 &v) const
+{
+    return vec3(
+        v.d[0] * d[0] + v.d[1] * d[3] + v.d[2] * d[6],
+        v.d[0] * d[1] + v.d[1] * d[4] + v.d[2] * d[7],
+        v.d[0] * d[2] + v.d[1] * d[5] + v.d[2] * d[8]
+    );
 }

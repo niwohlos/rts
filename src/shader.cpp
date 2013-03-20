@@ -241,6 +241,22 @@ void program::set_uniform(int location, const mat4 &m)
 }
 
 
+void program::set_uniform(int location, const mat3 &m)
+{
+    use();
+
+    glUniformMatrix3fv(location, 1, false, m.d);
+}
+
+
+void program::set_uniform(int location, const vec3 &v)
+{
+    use();
+
+    glUniform3fv(location, 1, v.d);
+}
+
+
 void program::set_uniform(int location, int v)
 {
     use();

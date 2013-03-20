@@ -19,7 +19,7 @@ class terrain
         unsigned height_map_gl_id, texture_gl_id;
 
         program *display_program;
-        int display_program_mvp_loc;
+        int display_program_mvp_loc, display_program_nrm_loc, display_program_inc_loc;
 
         unsigned vertex_buffer;
         int vertex_buffer_vertices;
