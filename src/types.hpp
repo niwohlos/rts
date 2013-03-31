@@ -63,6 +63,12 @@ class vec3
         float &operator[](int i)
         { return d[i]; }
 
+        vec3 operator*(float s) const
+        { return vec3(x * s, y * s, z * s); }
+
+        vec3 operator+(const vec3 &v) const
+        { return vec3(x + v.x, y + v.y, z + v.z); }
+
 
         union
         {
@@ -89,6 +95,12 @@ class vec2
 
         float &operator[](int i)
         { return d[i]; }
+
+        vec2 operator*(float s) const
+        { return vec2(x * s, y * s); }
+
+        vec2 operator+(const vec2 &v) const
+        { return vec2(x + v.x, y + v.y); }
 
 
         union
