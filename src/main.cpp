@@ -74,13 +74,11 @@ int main(int argc, char *argv[])
 
     camera *cam = new camera(M_PI / 3.f, (float)width / (float)height);
 
-    t.update_camera(cam);
-
+    float fps = get_fps();
 
     while (!quit)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
         t.draw();
 
@@ -88,10 +86,13 @@ int main(int argc, char *argv[])
         SDL_GL_SwapBuffers();
 
 
-        float fps = get_fps();
+        fps = get_fps();
 
         printf("FPS: %.1f    \r", fps);
         fflush(stdout);
+
+
+        t.update_camera(cam);
 
 
         SDL_Event event;
